@@ -2,29 +2,20 @@ import React from 'react';
 import MapGL from 'react-map-gl';
 import DeckGL, { LineLayer } from 'deck.gl';
 
+import { data } from './data';
+
 // Set your mapbox token here
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiY2FscGFsaXUiLCJhIjoiY2o3MWk4Yzh6MDE3ZjMzbnptNWo0OGlnaSJ9.hJcfS-eBH4p0BbAty5YjwQ';  // eslint-disable-line
 
-const latitude = 22.336401;
-const longitude = 114.263518;
-
-const data = [
-  {
-    sourcePosition: [longitude, latitude],
-    targetPosition: [longitude, latitude + 0.001],
-  },
-  {
-    sourcePosition: [longitude + 0.001, latitude],
-    targetPosition: [longitude, latitude + 0.001],
-  },
-];
+const latitude = 22.337706;
+const longitude = 114.262974;
 
 const viewport = {
   latitude,
   longitude,
   zoom: 16.140440,
   bearing: 0,
-  pitch: 60,
+  pitch: 0,
 };
 const width = 500;
 const height = 500;
