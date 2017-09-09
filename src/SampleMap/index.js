@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import MapGL from 'react-map-gl';
 import DeckGL, { LineLayer } from 'deck.gl';
 
@@ -17,28 +17,67 @@ const viewport = {
   bearing: 0,
   pitch: 0,
 };
-const width = 500;
-const height = 500;
 
-const SampleMap = () => (
-  <MapGL
-    {...viewport}
-    width={width}
-    height={height}
-    mapboxApiAccessToken={MAPBOX_TOKEN}
-  >
-    <DeckGL
-      {...viewport}
-      width={width}
-      height={height}
-      debug
-      layers={[
-        new LineLayer({
-          data,
-        }),
-      ]}
-    />
-  </MapGL>
-);
+
+const handleClick = (event) => {
+  console.log(event.lngLat);
+};
+
+class SampleMap extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      viewport,
+      width: 500,
+      height: 500,
+    };
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize.bind(this));
+    this.resize();
+  }
+
+  onViewportChange(newViewport) {
+    this.setState({
+      width: newViewport.width,
+      height: newViewport.height,
+    });
+  }
+
+  resize() {
+    console.log(window.innerWidth, window.innerHeight);
+    this.onViewportChange({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }
+
+  render() {
+    const { width, height } = this.state;
+
+    return (
+      <MapGL
+        {...viewport}
+        width={width}
+        height={height}
+        mapboxApiAccessToken={MAPBOX_TOKEN}
+        onClick={handleClick}
+      >
+        <DeckGL
+          {...viewport}
+          width={width}
+          height={height}
+          debug
+          layers={[
+            new LineLayer({
+              data,
+            }),
+          ]}
+        />
+      </MapGL>
+    );
+  }
+}
 
 export default SampleMap;
