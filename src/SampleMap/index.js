@@ -45,7 +45,7 @@ class SampleMap extends Component {
   }
 
   resize() {
-    console.log(window.innerWidth, window.innerHeight);
+    // console.log(window.innerWidth, window.innerHeight);
     this.onViewportChange({
       width: window.innerWidth,
       height: window.innerHeight,
