@@ -8,11 +8,11 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiY2FscGFsaXUiLCJhIjoiY2o3MWk4Yzh6MDE3ZjMzbnptNWo
 const latitude = 22.337706;
 const longitude = 114.262974;
 
-const viewport = {
+const defaultViewport = {
   latitude,
   longitude,
-  zoom: 16.140440,
-  // zoom: 10,
+  zoom: 16,
+  maxZoom: 18,
   bearing: 0,
   pitch: 0,
 };
@@ -26,9 +26,11 @@ class SampleMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewport,
-      width: 500,
-      height: 500,
+      viewport: {
+        ...defaultViewport,
+        width: 500,
+        height: 500,
+      },
     };
   }
 
@@ -37,15 +39,30 @@ class SampleMap extends Component {
     this.resize();
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize.bind(this));
+  }
+
   onViewportChange(newViewport) {
-    this.setState({
-      width: newViewport.width,
-      height: newViewport.height - 200,
+    this.setState((prevState) => {
+      const { zoom, maxZoom } = prevState.viewport;
+      let currentZoom = zoom;
+
+      // Increase zoom
+      if (zoom + 0.01 > maxZoom) {
+        currentZoom = 16;
+      } else {
+        currentZoom += 0.01;
+      }
+
+      return {
+        viewport: { ...prevState.viewport, ...newViewport, zoom: currentZoom },
+      };
     });
   }
 
-  resize() {
-    // console.log(window.innerWidth, window.innerHeight);
+  resize(e) {
+    console.log(e);
     this.onViewportChange({
       width: window.innerWidth,
       height: window.innerHeight,
@@ -53,17 +70,16 @@ class SampleMap extends Component {
   }
 
   render() {
-    const { width, height } = this.state;
+    const { viewport } = this.state;
 
     return (
       <MapGL
         {...viewport}
-        width={width}
-        height={height}
+        onViewportChange={e => this.resize(e)}
         mapboxApiAccessToken={MAPBOX_TOKEN}
         onClick={handleClick}
       >
-        <DeckGLOverlay viewport={viewport} width={width} height={height} />
+        <DeckGLOverlay viewport={viewport} width={viewport.width} height={viewport.height} />
       </MapGL>
     );
   }
