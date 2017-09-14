@@ -40,7 +40,7 @@ class SampleMap extends Component {
   onViewportChange(newViewport) {
     this.setState({
       width: newViewport.width,
-      height: newViewport.height,
+      height: newViewport.height - 200,
     });
   }
 
